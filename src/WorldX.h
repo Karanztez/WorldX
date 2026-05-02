@@ -11,12 +11,14 @@ public:
     // Provides access to the logger, data directory, etc.
     [[nodiscard]] ll::mod::NativeMod& getSelf() const { return mSelf; }
 
-    bool load();
-    bool unload();
+    [[nodiscard]] bool load();
+    [[nodiscard]] bool unload() const;
 
 private:
     // The constructor now initializes mSelf.
     WorldX() : mSelf(*ll::mod::NativeMod::current()) {}
+
+    void registerCommands();
 
     ll::mod::NativeMod& mSelf;
 };

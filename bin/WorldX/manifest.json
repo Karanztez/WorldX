@@ -1,0 +1,9 @@
+{
+  "name": "WorldX",
+  "description": "World management and core features for WorldX network.",
+  "version": "0.1.0",
+  "author": "GordyX",
+  "type": "native",
+  "platform": "server",
+  "entry": "WorldX.dll"
+}

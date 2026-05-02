@@ -1,6 +1,6 @@
 add_rules("mode.debug", "mode.release")
 
--- 1. เพิ่ม Repo (ใช้ตัวเดียวกับ MagnusMod ที่บิ้วผ่าน)
+-- 1. เพิ่ม Repo
 add_repositories("levimc-repo https://github.com/LiteLDev/xmake-repo.git")
 
 -- 2. กำหนด Dependencies
@@ -27,38 +27,49 @@ target("WorldX")
     set_symbols("debug")
     set_runtimes("MD")
 
-    -- ดึงกฎการบิ้วของ LeviLamina
-    add_rules("@levibuildscript/linkrule")
-    add_rules("@levibuildscript/modpacker")
-
-    -- รวม Package เข้าเป้าหมาย
-    add_packages("levilamina", "levibuildscript")
-
-    -- [หัวใจสำคัญ] แก้ปัญหา Path หลอนด้วยการฉีด Path ทุกจุดที่น่าจะเป็นไปได้
+    -- [จุดที่แก้] ใช้การเช็คแบบ Xmake Native เพื่อป้องกัน Error
     on_load(function (target)
         import("core.project.project")
+
+        -- 1. ฉีด Include Path (เพื่อให้ผ่าน C1083)
         local pkg = target:pkg("levilamina")
         if pkg then
             local installdir = pkg:installdir()
-            -- เช็คทั้งโฟลเดอร์ include และ src (เพราะบางรุ่นไฟล์อยู่คนละที่)
             for _, sub in ipairs({"include", "src", "src-server"}) do
                 local incdir = path.join(installdir, sub)
                 if os.isdir(incdir) then
                     target:add("includedirs", incdir, {public = true})
-                    -- ใช้ /I เพื่อบังคับ Compiler MSVC ให้มองเป็น Internal Header
                     target:add("cxflags", "/I" .. incdir)
-                    print(">>> Injected Include Path: " .. incdir)
                 end
             end
         end
+
+        -- 2. จัดการเรื่อง Version (เช็คดื้อๆ เลยว่ามีโฟลเดอร์ .git ไหม)
+        local mod_version = target:version()
+        local git_dir = path.join(os.projectdir(), ".git")
+
+        if os.isdir(git_dir) then
+            -- ถ้ามี git ให้ดึง hash มาต่อท้าย
+            local hash = os.iorun("git rev-parse --short HEAD"):trim()
+            if hash then
+                mod_version = mod_version .. "+" .. hash
+            end
+        end
+
+        -- โหลด Rules
+        target:add("rules", "@levibuildscript/linkrule")
+        target:add("rules", "@levibuildscript/modpacker", { modVersion = mod_version })
     end)
 
-    -- Flags มาตรฐานสำหรับ MSVC และ LeviLamina
+    -- รวม Package
+    add_packages("levilamina", "levibuildscript")
+
+    -- Flags & Defines
     add_cxflags("/EHa", "/utf-8", "/W4")
     add_defines("NOMINMAX", "UNICODE", "_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS")
     add_defines("ENTT_PACKED_PAGE=128", "ENTT_SPARSE_PAGE=2048", "ENTT_NO_MIXIN", "LL_PLAT_S")
 
-    -- จัดการไฟล์ในโปรเจกต์
+    -- ไฟล์ในโปรเจกต์
     add_headerfiles("src/**.h")
     add_files("src/**.cpp")
     add_includedirs("src")

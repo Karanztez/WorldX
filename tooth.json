@@ -1,11 +1,11 @@
 {
   "format_version": 3,
   "format_uuid": "289f771f-2c9a-4d73-9f3f-8492495a924d",
-  "tooth": "github.com/your-username/WorldX",
+  "tooth": "github.com/LiteLDev/WorldX",
   "version": "0.1.0",
   "info": {
     "name": "WorldX",
-    "description": "A LeviLamina mod.",
+    "description": "World management and core network features.",
     "tags": [
       "platform:levilamina",
       "type:mod"
@@ -14,15 +14,16 @@
   },
   "variants": [
     {
+      "label": "server",
       "platform": "win-x64",
       "dependencies": {
-        "github.com/LiteLDev/LeviLamina": "1.3.*"
+        "github.com/LiteLDev/LeviLamina": "26.10.9"
       },
       "assets": [
         {
           "type": "zip",
           "urls": [
-            "https://github.com/your-username/WorldX/releases/download/v0.1.0/WorldX-windows-x64.zip"
+            "https://{{tooth}}/releases/download/v{{version}}/WorldX-server-windows-x64.zip"
           ],
           "placements": [
             {
@@ -32,7 +33,19 @@
             }
           ]
         }
-      ]
+      ],
+      "preserve_files": [],
+      "remove_files": [],
+      "scripts": {
+        "pre_install": [],
+        "install": [],
+        "post_install": [],
+        "pre_pack": [],
+        "post_pack": [],
+        "pre_uninstall": [],
+        "uninstall": [],
+        "post_uninstall": []
+      }
     }
   ]
 }

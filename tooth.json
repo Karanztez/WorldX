@@ -1,0 +1,38 @@
+{
+  "format_version": 3,
+  "format_uuid": "289f771f-2c9a-4d73-9f3f-8492495a924d",
+  "tooth": "github.com/your-username/WorldX",
+  "version": "0.1.0",
+  "info": {
+    "name": "WorldX",
+    "description": "A LeviLamina mod.",
+    "tags": [
+      "platform:levilamina",
+      "type:mod"
+    ],
+    "avatar_url": ""
+  },
+  "variants": [
+    {
+      "platform": "win-x64",
+      "dependencies": {
+        "github.com/LiteLDev/LeviLamina": "1.3.*"
+      },
+      "assets": [
+        {
+          "type": "zip",
+          "urls": [
+            "https://github.com/your-username/WorldX/releases/download/v0.1.0/WorldX-windows-x64.zip"
+          ],
+          "placements": [
+            {
+              "type": "dir",
+              "src": "WorldX/",
+              "dest": "plugins/WorldX/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
